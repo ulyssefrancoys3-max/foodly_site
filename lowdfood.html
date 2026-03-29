@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redirection</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #ff7a00, #ffae42);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Image au centre */
+.center-img {
+    width: 350px; /* 👈 plus grand */
+    max-width: 80%;
+    height: auto;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Animation douce */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+</style>
+
+</head>
+<body>
+
+<img src="https://github.com/ulyssefrancoys3-max/foodly_site/blob/main/iconefoodly.png?raw=true" class="center-img" alt="Image">
+
+<script>
+setTimeout(function() {
+    window.location.href = "https://ulyssefrancoys3-max.github.io/foodly_site/foodly.html";
+}, 3000);
+</script>
+
+</body>
+</html>
