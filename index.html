@@ -189,7 +189,7 @@ async function appliquerReduction() {
     const valide = await verifierCodePromo(code);
 
     if (valide) {
-        alert("✅ Code valide ! Réduction appliquée");
+        alert(" Code valide ! Réduction appliquée");
 
         // Exemple simple de réduction (à adapter à ton total réel)
         let total = parseFloat(document.getElementById("total").innerText);
@@ -198,7 +198,7 @@ async function appliquerReduction() {
         document.getElementById("total").innerText = nouveauTotal.toFixed(2);
 
     } else {
-        alert("❌ Code invalide");
+        alert(" Code invalide");
     }
 }
 </script>
@@ -212,7 +212,7 @@ async function appliquerReduction() {
 <div class="menu" id="menu"></div>
 
 <div class="cart">
-<h3>🛒 Panier</h3>
+<h3>Panier</h3>
 <input id="name" placeholder="Nom du client">
 <div id="cart"></div>
 
