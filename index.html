@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Accueil</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+
+    /* IMAGE DE FOND */
+    background: url("https://github.com/ulyssefrancoys3-max/foodly_site/blob/main/Capture%20d'%C3%A9cran%202026-03-29%20163704.png?raw=true") no-repeat center center/cover;
+
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* FILTRE SOMBRE POUR LIRE MIEUX */
+.overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    z-index: 0;
+}
+
+/* CONTENEUR */
+.container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* BOUTONS */
+.menu {
+    width: 280px;
+    height: 190px;
+    border-radius: 25px;
+    overflow: hidden;
+    text-decoration: none;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+
+    opacity: 0;
+    transform: translateY(40px);
+    animation: fadeSlide 0.8s ease forwards;
+}
+
+/* DELAI */
+.menu:nth-child(1) { animation-delay: 0.2s; }
+.menu:nth-child(2) { animation-delay: 0.4s; }
+.menu:nth-child(3) { animation-delay: 0.6s; }
+
+/* IMAGE */
+.menu img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s, filter 0.5s;
+}
+
+/* HOVER */
+.menu:hover {
+    transform: scale(1.07);
+}
+
+.menu:hover img {
+    transform: scale(1.15);
+    filter: brightness(1.2);
+}
+
+/* ANIMATION ENTRÉE */
+@keyframes fadeSlide {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+    }
+}
+</style>
+
+</head>
+<body>
+
+<div class="overlay"></div>
+
+<div class="container">
+
+    <a href="page1.html" class="menu">
+        <img src="https://via.placeholder.com/500x350/ffb74d/ffffff">
+    </a>
+
+    <a href="https://ulyssefrancoys3-max.github.io/foodly_site/foodly.html" class="menu">
+        <img src="https://github.com/ulyssefrancoys3-max/foodly_site/blob/main/iconefoodly.png?raw=true">
+    </a>
+
+    <a href="page3.html" class="menu">
+        <img src="https://via.placeholder.com/500x350/ff9800/ffffff">
+    </a>
+
+</div>
+
+</body>
+</html>
