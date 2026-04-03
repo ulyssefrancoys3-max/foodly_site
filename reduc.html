@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Foodly - Réduction</title>
+
+<style>
+body {
+  margin:0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(160deg,#fff7ed,#ffe5d9);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.box {
+  background:white;
+  padding:30px;
+  border-radius:15px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.1);
+  width:300px;
+  text-align:center;
+}
+
+h2 {
+  color:#ff7a00;
+}
+
+input {
+  width:100%;
+  padding:10px;
+  margin:10px 0;
+  border-radius:8px;
+  border:1px solid #ffad6e;
+}
+
+button {
+  width:100%;
+  padding:10px;
+  background:#ff7a00;
+  border:none;
+  color:white;
+  font-weight:bold;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+button:hover {
+  transform: scale(1.03);
+}
+
+#result {
+  margin-top:15px;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>Code promo</h2>
+
+  <input id="orderId" placeholder="ID de commande (FD-XXXXXX)">
+  <input id="promoCode" placeholder="Code promo">
+
+  <button onclick="applyPromo()">Appliquer</button>
+
+  <div id="result"></div>
+</div>
+<script>
+const WEBHOOK_URL = "https://discord.com/api/webhooks/1489747260672708683/ElTJXzQNDOU7cB6RBXevunwPSc62AAcRSje9sKhJRvdyGNqs0gPLX25DmOkw86tMS-Mf";
+const URL_DB = "https://raw.githubusercontent.com/ulyssefrancoys3-max/foodly_site/main/database.txt";
+
+// 🔐 Vérification SHA-256
+async function verifierCodePromo(codeUser) {
+    try {
+        const response = await fetch(URL_DB);
+        const text = await response.text();
+
+        const partieCodes = text.split("/ fin des code /")[0];
+
+        const lignes = partieCodes
+            .split("\n")
+            .map(l => l.trim())
+            .filter(l => l !== "" && !l.startsWith("codes:"));
+
+        const encoder = new TextEncoder();
+        const data = encoder.encode(codeUser.trim());
+        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+        return lignes.some(code => code.toLowerCase() === hashHex.toLowerCase());
+
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
+}
+
+// 🔍 Vérifie si déjà utilisé
+function dejaUtilise(id, code) {
+    const data = JSON.parse(localStorage.getItem("usedCodes") || "{}");
+
+    if(data[id] && data[id].includes(code)){
+        return true;
+    }
+    return false;
+}
+
+// 💾 Enregistre le code utilisé
+function enregistrerCode(id, code) {
+    let data = JSON.parse(localStorage.getItem("usedCodes") || "{}");
+
+    if(!data[id]){
+        data[id] = [];
+    }
+
+    data[id].push(code);
+
+    localStorage.setItem("usedCodes", JSON.stringify(data));
+}
+
+// 🚀 Fonction principale
+async function applyPromo(){
+    const id = document.getElementById("orderId").value.trim();
+    const code = document.getElementById("promoCode").value.trim();
+    const result = document.getElementById("result");
+
+    if(!id || !code){
+        result.innerHTML = " Remplis tout";
+        result.style.color = "red";
+        return;
+    }
+
+    if(!id.startsWith("FD-")){
+        result.innerHTML = "ID invalide";
+        result.style.color = "red";
+        return;
+    }
+
+    // 🔴 déjà utilisé ?
+    if(dejaUtilise(id, code)){
+        result.innerHTML = " Code déjà utilisé";
+        result.style.color = "red";
+        return;
+    }
+
+    const valide = await verifierCodePromo(code);
+
+    if(valide){
+        result.innerHTML = "Réduction appliquée (-50%)";
+        result.style.color = "green";
+
+        localStorage.setItem("promo_"+id, "50");
+
+        //  enregistrer comme utilisé
+        enregistrerCode(id, code);
+
+        //  webhook
+        fetch(WEBHOOK_URL, {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify({
+                content: `Code utilisé\nID: ${id}\nCode: ${code}`
+            })
+        });
+
+    } else {
+        result.innerHTML = "Code invalide";
+        result.style.color = "red";
+    }
+}
+</script>
+</body>
+</html>
